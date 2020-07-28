@@ -1,12 +1,7 @@
+pipeline {
+    agent any
 
-
-    node {
-	stage ('scm checkout stage') {
-
-            steps {
-               git 'https://github.com/apidae2020/springboot'
-            }
-        }
+    stages {
         stage ('Compile Stage') {
 
             steps {
@@ -15,4 +10,22 @@
             }
         }
 
+        stage ('Testing Stage') {
+
+            steps {
+                withMaven(maven : 'apache-maven-3.6.3') {
+                    sh "mvn test"
+                }
+            }
+        }
+
+
+        stage ('Deployment Stage') {
+            steps {
+                withMaven(maven : 'apache-maven-3.6.3') {
+                    sh "mvn deploy"
+                }
+            }
+        }
     }
+}
